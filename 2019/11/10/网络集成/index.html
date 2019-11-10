@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Xin Ge's ballad feelings">
+
+
+
+    <meta name="description" content="我要记住你的样子，像鱼记住水的拥抱">
+
+
+
+<title>网络集成 | 就让这时光别停留</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Xin Ge&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Xin Ge&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">网络集成</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Xin Ge's ballad feelings</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 10, 2019&nbsp;&nbsp;12:13:58</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="1-配置AS1和AS2两台接入层交换机"><a href="#1-配置AS1和AS2两台接入层交换机" class="headerlink" title="1.配置AS1和AS2两台接入层交换机"></a>1.配置AS1和AS2两台接入层交换机</h2><p>#AS1<br>Switch&gt;en<br>Switch#conf t<br>Switch(config)#vlan 11<br>Switch(config)#vlan 22<br>Switch(config-vlan)#int f0/2<br>Switch(config-if)#switchport mode access<br>Switch(config-if)#switchport access vlan 11<br>Switch(config-if)#int f0/23<br>Switch(config-if)#switchport mode access<br>Switch(config-if)#switchport access vlan 22<br>#AS2<br>Switch&gt;en<br>Switch#conf t<br>Switch(config)#vlan 22<br>Switch(config-vlan)#int f0/2<br>Switch(config-if)#switchport mode access<br>Switch(config-if)#switchport access vlan 22</p>
+<h2 id="2-配置CS核心交换机"><a href="#2-配置CS核心交换机" class="headerlink" title="2.配置CS核心交换机"></a>2.配置CS核心交换机</h2><p>#CS<br>Switch&gt;en<br>Switch#conf t<br>Switch(config)#ip routing</p>
+<p>Switch(config)#int f0/1<br>Switch(config-if)#switchport trunk encapsulation dot1q<br>Switch(config-if)#switchport mode trunk<br>Switch(config)#int f0/2<br>Switch(config-if)#switchport trunk encapsulation dot1q<br>Switch(config-if)#switchport mode trunk</p>
+<p>Switch(config)#vlan 11<br>Switch(config-vlan)#vlan 22<br>Switch(config-vlan)#vlan 100<br>Switch(config-vlan)#vlan 200<br>Switch(config-vlan)#int f0/24<br>Switch(config-if)#no shutdown<br>Switch(config-if)#switchport access vlan 200<br>Switch(config-if)#int vlan 1<br>Switch(config-if)#no shutdown<br>Switch(config-if)#int f0/22<br>Switch(config-if)#no shutdown<br>Switch(config-if)#switchport access vlan 1<br>Switch(config-if)#int f0/6<br>Switch(config-if)#no shutdown<br>Switch(config-if)#switchport access vlan 100</p>
+<p>Switch(config-if)#int f0/1<br>Switch(config-if)#no shutdown<br>Switch(config-if)#int f0/2<br>Switch(config-if)#no shutdown<br>Switch(config)#int vlan 1<br>Switch(config-if)#ip address 172.16.1.1 255.255.255.0<br>Switch(config-if)#int vlan 11<br>Switch(config-if)#ip address 172.16.11.1 255.255.255.0<br>Switch(config-if)#int vlan 22<br>Switch(config-if)#ip address 172.16.22.1 255.255.255.0<br>Switch(config-if)#int vlan 100<br>Switch(config-if)#ip address 172.16.100.254 255.255.255.0<br>Switch(config-if)#int vlan 200<br>Switch(config-if)#ip address 172.16.200.1 255.255.255.0</p>
+<p>Switch(config-if)#int f0/5<br>Switch(config-if)#no switchport<br>Switch(config-if)#ip address 172.16.253.1 255.255.255.0<br>Switch(config)#ip route 0.0.0.0 0.0.0.0 172.16.253.2</p>
+<h2 id="3-配置firewall出口路由器"><a href="#3-配置firewall出口路由器" class="headerlink" title="3.配置firewall出口路由器"></a>3.配置firewall出口路由器</h2><p><img src="https://img-blog.csdnimg.cn/20191109222008137.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcWl1cWl1NTIw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="4-Firewall上配置映射："><a href="#4-Firewall上配置映射：" class="headerlink" title="4.Firewall上配置映射："></a>4.Firewall上配置映射：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip nat inside source staic 172.16.254.2 2.0.0.3</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-配置ISP1、ISP2、ISP3互联网路由器"><a href="#5-配置ISP1、ISP2、ISP3互联网路由器" class="headerlink" title="5.配置ISP1、ISP2、ISP3互联网路由器"></a>5.配置ISP1、ISP2、ISP3互联网路由器</h2><p>#ISP1<br>Router(config)#int loopback 0<br>Router(config-if)#ip address 10.0.0.1 255.255.255.255<br>Router(config)#router ospf 1<br>Router(config-router)#network 2.0.0.0 0.0.0.7 area 0<br>Router(config-router)#network 3.0.0.0 0.0.0.255 area 0<br>Router(config-router)#network 5.0.0.0 0.0.0.255 area 0<br>Router(config-router)#end<br>Router#show ip route<br>#ISP2<br>Router(config)#int loopback 0<br>Router(config-if)#ip address 10.0.0.2 255.255.255.255<br>Router(config-if)#exit<br>Router(config)#router ospf 1<br>Router(config-router)#network 5.0.0.0 0.0.0.255 area 0<br>Router(config-router)#network 4.0.0.0 0.0.0.255 area 0<br>Router(config-router)#network 8.0.0.0 0.0.0.255 area 0<br>Router(config-router)#network 7.0.0.0 0.0.0.3 area 0<br>Router(config-router)#end<br>Router#show ip route<br>#ISP3<br>Router(config)#int loopback 0<br>Router(config-if)#ip address 10.0.0.3 255.255.255.255<br>Router(config-if)#exit<br>Router(config)#route ospf 1<br>Router(config-router)#network 3.0.0.0 0.0.0.255 area 0<br>Router(config-router)#network 6.0.0.0 0.0.0.255 area 0<br>Router(config-router)#network 4.0.0.0 0.0.0.255 area 0</p>
+<h2 id="6-配置Div-R公司路由器-ppp"><a href="#6-配置Div-R公司路由器-ppp" class="headerlink" title="6.配置Div-R公司路由器(ppp)"></a>6.配置Div-R公司路由器(ppp)</h2><p><img src="https://img-blog.csdnimg.cn/20191109222748743.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcWl1cWl1NTIw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191109222807323.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcWl1cWl1NTIw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="router-FW上："><a href="#router-FW上：" class="headerlink" title="router-FW上："></a>router-FW上：</h2><p><img src="https://img-blog.csdnimg.cn/20191109222825697.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcWl1cWl1NTIw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="7-配置无线接入："><a href="#7-配置无线接入：" class="headerlink" title="7.配置无线接入："></a>7.配置无线接入：</h2><p>AP –&gt; Config –&gt; Port 1 –&gt; SSID: AP1 WPA2-PSK: 12345678<br>Wireless Router0 –&gt; Config –&gt; Wireless –&gt; SSID: AP2 WPA2-PSK: 87654321<br>在两台笔记本上配置无线网卡，分别接入无线AP和无线路由器<br>Laptop22.3：手动配置静态 IP 地址172.16.22.3<br>Laptop22.3： –&gt; config –&gt; wireless0 –&gt; SSID: AP1 wpa2-psk:12345678</p>
+<p>Laptop1： –&gt; config –&gt; wireless0 –&gt; SSID: AP2 wpa2-psk:87654321<br>–&gt; Desktop –&gt; Connect –&gt; Refresh –&gt; 选择AP2 –&gt; Connect</p>
+<h2 id="8-配置PPPOE接入："><a href="#8-配置PPPOE接入：" class="headerlink" title="8.配置PPPOE接入："></a>8.配置PPPOE接入：</h2><p>Cloud0 —&gt; DSL —&gt; Modem4 &lt;-&gt; Ethernet6<br>Modem5 &lt;-&gt; Ethernet6<br><strong>ISP2上进行配置：</strong><br>int f1/0<br>ip address 8.0.0.1 255.0.0.0<br>pppoe enable<br>ip local pool mypool 8.0.0.10 8.0.0.100<br>username user1 password 0 123<br>Router(config)#aaa new-model                 // 启用 AAA<br>Router(config)#aaa authentication ppp default group radius     // 使用 Radius 对所有 PPP 用户进行身份验证<br>Router(config)#radius-server host 6.0.0.2 key 123            // 指定外部 AAA 服务器,设置预共享密钥<br>int virtual-template 1                    // 定义虚拟模板<br>ip unnumbered f1/0                     // 借用以太口地址<br>peer default ip address pool mypool     // 设定地址池<br>ppp authentication chap                // 设定认证方式<br>vpdn enable                     // 全局启用虚拟拨号<br>vpdn-group mygroup                 // 定义虚拟拨号组<br>accept-dialin                    // 允许拨号接入<br>protocol pppoe                 // 接入协议为pppoe<br>virtual-template 1            // 设定虚拟模板<br><strong>Inter-Srv上：</strong><br>Service —&gt; AAA —&gt;<br>Network Configuration:<br>pppoe 4.0.0.2 Radius 123<br>ppp 8.0.0.1 Radius 123<br><strong>User Setup:</strong><br>u1 cisco // 用于 WireLess 认证<br>test 123 // 用于 PC0 认证<br>在pc0使用PPPoE Dialer接入网络，ipconfig查看地址并ping6.0.0.2<br>Desktop —&gt; PPPoE —&gt; User Name: test Password: 123<br>配置无线路由器使用PPPoE接入网络<br>Setup —&gt; PPPoE —&gt; Username: u1 Password: cisco Save Settings<br>WireLess —&gt; Basic WireLess Settings —&gt; Network Name: AP2 Standard Channel: 11<br>—&gt; WireLess Security —&gt; Security Mode: WAP2 Persional AES 87654321</p>
+<h2 id="9-配置VPN"><a href="#9-配置VPN" class="headerlink" title="9.配置VPN"></a>9.配置VPN</h2><p><img src="https://img-blog.csdnimg.cn/20191109223605622.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcWl1cWl1NTIw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191109223617699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcWl1cWl1NTIw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191109223750777.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcWl1cWl1NTIw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191109223645170.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcWl1cWl1NTIw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="10-配置VOIP"><a href="#10-配置VOIP" class="headerlink" title="10.配置VOIP"></a>10.配置VOIP</h2><p>a)把总部IP电话和callmanager的接入端口加入到voice vlan1<br>AS1：<br>vlan 100<br>int f0/1<br>switchport mode access<br>switchport access vlan 100<br>switchport voice vlan 1<br>AS2:<br>vlan 100<br>int f0/1<br>switchport mode access<br>switchport access vlan 100<br>switchport voice vlan 1<br>CS:<br>int f0/6<br>switchport mode access<br>switchport access vlan 100<br>switchport voice vlan 1<br>b)把分公司IP电话和Div-R向内网的接入端口加入到voice  vlan1<br>    Switch3:<br>        int f0/1<br>        switchport voice vlan 1<br>        switchport mode access<br>        int f0/24<br>        switchport mode access<br>        switchport voice vlan 1</p>
+<p>c)在公司总部配置callmanager ，测试总部两部电话的连通性<br>    CallManager:<br>        # 配置接口<br>    # int f0/0<br>    # ip add 172.16.100.1 255.255.255.0<br>        # 配置DHCP<br>    # ip dhcp pool voice<br>    # network 172.16.100.0 255.255.255.0<br>    # default-router 172.16.100.1<br>    # option 150 ip 172.16.100.1<br>        # 配置呼叫服务<br>    # telephone-service<br>    # max-dn 10<br>    # max-ephone 10<br>    # ip source-address 172.16.100.1 port 2000<br>    # auto assign 1 to 10<br>        # 为电话配置号码<br>    # ephone-dn 1<br>    # number 1001<br>    # ephone-dn 2<br>    # number 1002<br>嘿嘿，后面的分公司的电话与总公司的电话相通，还有禁止PC11.2访问互联网，小编还没有搞定，将会在下一篇博文中，谢谢观看！</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Xin Ge's ballad feelings</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://yoursite.com/2019/11/10/网络集成/">http://yoursite.com/2019/11/10/网络集成/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY<strong>?</strong></strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2019/11/04/对Flink的Stream-在-operator传递模式疑惑演变/">对Flink的Stream 在 operator传递模式疑惑演变</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Xin Ge&#39;s ballad feelings | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
