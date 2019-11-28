@@ -109,6 +109,68 @@
             <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
 
     
     <article class="post-wrap">
@@ -131,7 +193,18 @@
         </header>
 
         <div class="post-content">
-            
+            <p>Django搭建项目</p>
+<p>1，安装Django框架<br>pip install django==1.9  -i <a href="https://pypi.douban.com/simple" target="_blank" rel="noopener">https://pypi.douban.com/simple</a><br>2.在Linux命令行中执行以下命令安装 mysql 驱动。（本实验机已安装mysql 驱动，可跳过此步骤）<br>pip install mysqlclient  -i <a href="https://pypi.douban.com/simple" target="_blank" rel="noopener">https://pypi.douban.com/simple</a><br>另一种方式<br>sudo apt-get install python-mysqldb<br>在<strong>init</strong>编辑文件内容<br>import pymysql<br>pymysql.install_as_MySQLdb()<br>3,将数据库的信息映射到models.py文件<br>python3 manage.py inspectdb &gt;models.py<br>4，python命令行新建一个Django项目<br>django-admin startproject mysite</p>
+<h1 id="在Django项目-my-project-的根目录下执行"><a href="#在Django项目-my-project-的根目录下执行" class="headerlink" title="在Django项目(my_project)的根目录下执行"></a>在Django项目(my_project)的根目录下执行</h1><p>python3 manage.py startapp my_app<br>5.开启Mysql服务（密码：zhangyu）。<br>sudo service mysql start<br>6.进入Mysql命令行<br>mysql -uroot -pstrongs<br>7.创建housedatas数据库。<br>CREATE DATABASE housedatas CHARACTER SET utf8 COLLATE utf8_general_ci;<br>use housedatas;<br>8配置数据库信息<br>四.对项目进行配置和编辑<br>1.打开settings.py文件。<br>（1）找到DATABASES ，对数据库相关信息进行配置，修改结果如下：<br>view plain copy<br>DATABASES = {<br>    ‘default’: {<br>        ‘ENGINE’: ‘django.db.backends.mysql’,<br>        ‘NAME’: ‘housedatas’,<br>        ‘USER’:’root’,<br>        ‘PASSWORD’:’strongs’,<br>        ‘HOST’:’’,<br>        ‘PORT’:’’,<br>    }<br>}<br>（2）找到TEMPLATES ，修改TEMPLATES 结果如下：<br>view plain copy<br>TEMPLATES = [<br>    {<br>        ‘BACKEND’: ‘django.template.backends.django.DjangoTemplates’,<br>        ‘DIRS’: [os.path.join(BASE_DIR,  ‘templates’)],<br>        ‘APP_DIRS’: True,<br>        ‘OPTIONS’: {<br>            ‘context_processors’: [<br>                ‘django.template.context_processors.debug’,<br>                ‘django.template.context_processors.request’,<br>                ‘django.contrib.auth.context_processors.auth’,<br>                ‘django.contrib.messages.context_processors.messages’,<br>            ],<br>        },<br>    },<br>]<br>（3）将MIDDLEWARE 中的代码注释，如下所示：<br>view plain copy<br>MIDDLEWARE = [<br>    ‘django.middleware.security.SecurityMiddleware’,<br>    ‘django.contrib.sessions.middleware.SessionMiddleware’,<br>    ‘django.middleware.common.CommonMiddleware’,<br>    #’django.middleware.csrf.CsrfViewMiddleware’,<br>    ‘django.contrib.auth.middleware.AuthenticationMiddleware’,<br>    ‘django.contrib.messages.middleware.MessageMiddleware’,<br>    ‘django.middleware.clickjacking.XFrameOptionsMiddleware’,<br>]<br>‘django.middleware.csrf.CsrfViewMiddleware’是Django的中间件，csrf是Cross Site Request Forgery的缩写，称其为“跨站请求伪造”；<br>先将其注释，这样可以顺利通过post请求。<br>（4）在该页面添加代码如下：<br>view plain copy<br>STATICFILES_DIRS = (<br>    os.path.join(BASE_DIR, ‘static’),<br>)<br>拼接一个static绝对路径赋值给STATICFILES_DIRS，这样static目录下存放的js和样式文件，可以以static的相对路径导入。<br>2.在house_map/web/models.py下编写如下程序，创建models。<br>view plain copy<br>from django.db import models  </p>
+<p>class Map(models.Model):<br>    name=models.CharField(max_length=32)<br>    value=models.FloatField()  </p>
+<p>class Map2(models.Model):<br>    name=models.CharField(max_length=32)<br>    value=models.FloatField()<br>CharField 用于存储字符串，max_length设置最大长度；<br>FloatField在 Python 中使用float 实例来表示一个浮点数。<br>3.在urls.py下编写如下程序，设置url。<br>view plain copy<br>from django.conf.urls import url<br>from web import views  </p>
+<p>urlpatterns = [<br>    url(r’^map1/$’, views.map_view),<br>    url(r’^map_data/$’, views.map_data),<br>    url(r’^map2/$’, views.map_view2),<br>    url(r’^map_data2/$’, views.map_data2)<br>]<br>url()函数有四个参数，两个是必须的：regex和view，两个可选的：kwargs和name。<br>regex是regular expression的简写，这是字符串中的模式匹配的一种语法，Django 将请求的URL从上至下依次匹配列表中的正则表达式，直到匹配到一个为止。<br>view当 Django匹配了一个正则表达式就会调用指定的view逻辑，上面代码中会调用web/views.py中的函数。<br>kwargs任意关键字参数可传一个字典至目标view。<br>name命名URL，使url在 Django 的其他地方使用，特别是在模板中。<br>4.在house_map/web/views.py下编写如下程序，编写views函数。<br>view plain copy<br>from django.shortcuts import render  </p>
+<h1 id="Create-your-views-here"><a href="#Create-your-views-here" class="headerlink" title="Create your views here."></a>Create your views here.</h1><p>from django.shortcuts import render,redirect,HttpResponse<br>from web import models<br>import json<br>def map_view(request):<br>    return render(request, ‘map.html’)  </p>
+<p>def map_data(request):<br>    map_obj = models.Map.objects.all().values(‘name’, ‘value’)<br>    map_obj = list(map_obj)<br>    return HttpResponse(json.dumps(map_obj))  </p>
+<p>def map_view2(request):<br>    return render(request, ‘map2.html’)  </p>
+<p>def map_data2(request):<br>    map_obj = models.Map2.objects.all().values(‘name’, ‘value’)<br>    map_obj = list(map_obj)<br>    return HttpResponse(json.dumps(map_obj))<br>redirect：返回url的路径。<br>render：函数中第一个参数是request 对象，第二个参数是一个html文件名称，第三个是一个字典类型的可选参数，它将返回一个包含有给定的html文件根据给定的上下文渲染结果的 HttpResponse对象。<br>map_view函数：渲染map.html，返回此页面。<br>map_data函数：拿到map表的对象；这个地图需要数组中包含字典的类型，例如：[{‘name’: ‘北京’, ‘value’: 5.95}, {‘name’: ‘湖南’, ‘value’: 1.3}]，所以后端直接转换成这种类型，返回给前端。<br>5.网页程序的逻辑<br>request进来=&gt;从服务器获取数据-&gt;处理数据-&gt;把网页呈现出来。<br>url设置相当于客户端向服务器发出request请求的入口，并用来指明要调用的程序逻辑。<br>views用来处理程序逻辑，然后呈现到template(一般为GET方法，POST方法略有不同)。<br>template一般为html+CSS的形式，主要是呈现给用户的表现形式。<br>五.数据库同步<br>1.在编辑器下面点击Termainal。<br>3.输入以下命令，完成同步数据库。<br>view plain copy<br>python3 manage.py makemigrations<br>python3 manage.py migrate<br>六.数据准备<br>1.打开终端模拟器，进入MySQL命令行，导入数据。<br>view plain copy<br>source /data/mydata/housemap/housedata.txt<br>2.向web_map表中插入中国近十年房价的均值。<br>view plain copy<br>insert into web_map (name,value) select province as name,avg(price) as value from residential group by province;<br>3.创建用于存储2008年我国各省份房价平均值的tb2008表和存储2018年我国各省份房价平均值的tb2018表。<br>view plain copy<br>CREATE TABLE <code>tb2008</code> (<br>  <code>id</code> int(20) NOT NULL AUTO_INCREMENT,<br>  <code>name</code> varchar(100) NOT NULL,<br>  <code>value</code> double NOT NULL,<br>  PRIMARY KEY (<code>id</code>)<br>)ENGINE=InnoDB DEFAULT CHARSET=utf8;<br>view plain copy<br>CREATE TABLE <code>tb2018</code> (<br>  <code>id</code> int(20) NOT NULL AUTO_INCREMENT,<br>  <code>name</code> varchar(100) NOT NULL,<br>  <code>value</code> double NOT NULL,<br>  PRIMARY KEY (<code>id</code>)<br>)ENGINE=InnoDB DEFAULT CHARSET=utf8;<br>4.向tb2008插入数据。<br>view plain copy<br>insert into tb2008 (name,value) select province,avg(price) from residential where year=’2008’ group by province;<br>5.向tb2018插入数据。<br>view plain copy<br>insert into tb2018 (name,value) select province,avg(price) from residential where year=’2018’ and month=6 group by province;<br>6.向web_map2表中插入我国2018年各省份平均房价较2008年各省份平均房价增长率数据。<br>view plain copy<br>insert into web_map2(name,value) select tb2008.name,tb2018.value/tb2008.value from tb2008,tb2018  where tb2008.name=tb2018.name;<br>七.运行Django项目</p>
+<p>//$.get(‘/scatter_data/‘).done(function (data) {<br>    //填入数据<br>    data=$.parseJSON(data)<br>    male=[]<br>    female=[]<br>    for(var i=0;i&lt;247;i++){<br>        var temp=[]<br>        temp.push(parseFloat(data[i][‘height’]))<br>        temp.push(parseFloat(data[i][‘weight’]))<br>        male.push(temp)<br>    }<br>    console.log(male)</p>
+
         </div>
 
         
