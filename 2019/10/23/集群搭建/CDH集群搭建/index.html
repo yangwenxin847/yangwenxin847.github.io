@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Xin Ge's ballad feelings">
+
+
+
+    <meta name="description" content="我要记住你的样子，像鱼记住水的拥抱">
+
+
+
+<title>CDH集群搭建 | 就让这时光别停留</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Xin Ge&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Xin Ge&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">CDH集群搭建</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Xin Ge's ballad feelings</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 23, 2019&nbsp;&nbsp;10:56:44</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>CDH集群搭建<br>CDH背景<br>CDH (Cloudera’s Distribution, including Apache Hadoop)，是Hadoop众多分支中的一种，由Cloudera维护，基于稳定版本的Apache Hadoop构建，并集成了很多补丁，可直接用于生产环境。<br>系统环境<br>Master * 1：<br>Slave <em>2：<br>Cloudera Manager：5.12.1<br>CDH: 5.12.1<br>安装说明<br>官方参考文档：<br><a href="https://www.cloudera.com/documentation/enterprise/latest/topics/installation.html" target="_blank" rel="noopener">https://www.cloudera.com/documentation/enterprise/latest/topics/installation.html</a><br>官方共给出了3种安装方式：<br>方法一：必须要求所有机器都能连网，由于各种国外的网站被墙的厉害，尝试了几次各种超时错误，耽误时间不说，一旦失败，重装非常痛苦。<br>方法二：下载很多包，不方便容易迷路。<br>方法三：对系统侵入性最小,可实现全离线安装，而且重装非常方便。后期的集群统一包升级也非常好。（本篇采用该方法安装)<br>相关包的下载地址<br>Cloudera Manager下载地址：<br><a href="http://archive.cloudera.com/cm5/cm/5/cloudera-manager-el6-cm5.12.1_x86_64.tar.gz" target="_blank" rel="noopener">http://archive.cloudera.com/cm5/cm/5/cloudera-manager-el6-cm5.12.1_x86_64.tar.gz</a><br>CDH安装包地址：<a href="http://archive.cloudera.com/cdh5/parcels/latest/，由于我们的操作系统为CentOS7，需要下载以下文件：" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/parcels/latest/，由于我们的操作系统为CentOS7，需要下载以下文件：</a><br>CDH-5.12.1-1.cdh5.12.1.p0.3-el6.parcel<br>CDH-5.12.1-1.cdh5.12.1.p0.3-el6.pacel.sha1<br>manifest.json<br>准备工作（系统环境准备）<br>1.网络配置（所有节点）<br>vi /etc/sysconfig/network修改hostname：<br>2.打通SSH，设置ssh无密登陆（所有节点）<br>3.安装Java（所有节点）<br>4.关闭防火墙以及SELINUX<br>5.配置NTP时间同步服务<br>提示：这一步暂时可以跳过，但是在集群启动以后，会提示时间不同步。集群中所有主机必须保持时间同步，如果时间相差较大会引起各种问题。<br>5.1 设置时区（每个节点）：<br>tzselect(依次选下去)<br><img src="https://img-blog.csdnimg.cn/20191023111038750.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>5.2安装ntp（每个节点）：<br>yum -y install ntp<br>5.3 配置NTP<br>修改主节点ntp.conf文件如下<br>vi /etc/ntp.conf<br>master配置：<br>server 127.127.1.0<br>fudge 127.127.1.0 stratum 10<br>slave配置：（所有slave）<br>执行命令<br>ntpdate master(hostname)<br>设置开机启动:<br>chkconfig ntpd on<br>启动ntp：<br>service ntpd start<br>6.安装mysql<br>创建CM用的数据库：<br>–hive数据库<br>create database hive DEFAULT CHARSET utf8 COLLATE utf8_general_ci ;<br>–集群监控数据库<br>create database amon DEFAULT CHARSET utf8 COLLATE utf8_general_ci ;<br>–hue数据库<br>create database hue DEFAULT CHARSET utf8 COLLATE utf8_general_ci;<br>– oozie数据库<br>create database oozie DEFAULT CHARSET utf8 COLLATE utf8_general_ci;<br><img src="https://img-blog.csdnimg.cn/20191023111058359.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>安装Cloudera Manager Server和 Agent<br>将我们下载好的安装包上传至服务器并解压安装<br>主节点解压安装<br>cloudera manager的目录默认在/opt下，cdh5的源会默认在/opt/cloudera/parcel-repo寻找，所以不能解压到其他地方，使用命令<br>tar xzvf cloudera-manager</em>.tar.gz<br>CM可以按照个人喜好安装，我这里都安装在了/opt下以方便管理<br><img src="https://img-blog.csdnimg.cn/20191023111124482.png" alt="在这里插入图片描述"></p>
+<p>这里开始我们的cm需要与mysql进行交互，所以首先需要去MySql的官网下载JDBC驱动，<a href="http://dev.mysql.com/downloads/connector/j/，解压后找到mysql-connector-java-5.1.**-bin.jar，放到/opt/cm-5.12.1/share/cmf/lib/中，不多赘述。" target="_blank" rel="noopener">http://dev.mysql.com/downloads/connector/j/，解压后找到mysql-connector-java-5.1.**-bin.jar，放到/opt/cm-5.12.1/share/cmf/lib/中，不多赘述。</a><br>在主节点初始化CM5的数据库：<br>/opt/cm-5.12.1/share/cmf/schema/scm_prepare_database.sh mysql cm -hlocalhost -uroot -p123123 –scm-host localhost scm scm scm<br>Agent配置<br>修改/opt/cm-5.12.1/etc/cloudera-scm-agent/config.ini中的server_host为主节点的主机名。<br><img src="https://img-blog.csdnimg.cn/20191023111133426.png" alt><br>同步Agent到其他节点<br>在所有节点创建cloudera-scm用户<br>useradd –system –home=/opt/cm-5.12.1/run/cloudera-scm-server/ –no-create-home –shell=/bin/false –comment “Cloudera SCM User” cloudera-scm</p>
+<p>准备Parcels，用以安装CDH5<br>将我们提前下载好的Parcels文件上传到主节点的/opt/cloudera/parcel-repo/目录中（如果没有parcel-repo需要手动创建，这里不需要分发到所有节点）。<br><img src="https://img-blog.csdnimg.cn/20191023111153949.png" alt="在这里插入图片描述"></p>
+<p>注意！！最后一定要将CDH-5.12.1-1.cdh5.12.1.p0.3-el6.parcel.sha1，重命名为CDH-5.12.1-1.cdh5.12.1.p0.3-el6.parcel.sha，去掉末尾的1，否则系统会重新下载CDH-5.12.1-1.cdh5.12.1.p0.3-el6.parcel文件，也就不是纯离线安装了<br>相关启动脚本<br>通过/opt/cm-5.12.1/etc/init.d/cloudera-scm-server start启动服务端。<br>通过/opt/cm-5.12.1/etc/init.d/cloudera-scm-agent start启动Agent服务（所有Agent节点）。<br>以上我们是通过脚本来启动的，所以需要停止服务的时候，只需要把以上的start参数改为stop就可以啦。<br>service服务启动需要几分钟，取决于服务器的性能，此时我们可以使用<br>netstat -apn|grep 7180<br>查询端口被占用后，就可以用浏览器打开<a href="http://masterIP:7180/进行访问了，登录用户名与密码分别为admin。" target="_blank" rel="noopener">http://masterIP:7180/进行访问了，登录用户名与密码分别为admin。</a><br><img src="https://img-blog.csdnimg.cn/20191023111206493.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>至此基本上CM的安装己经完成，接下来就可以通过WEB界面进行安装CDH了！<br>安装CDH<br><img src="https://img-blog.csdnimg.cn/20191023111222556.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>这里我们选择免费版本后继续<br><img src="https://img-blog.csdnimg.cn/2019102311123040.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>继续<br><img src="https://img-blog.csdnimg.cn/20191023111237404.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>各个Agent节点正常启动后，可以在当前管理的主机列表中看到对应的节点。选择要安装的节点，这里我选择全部节点，继续。<br>出现以下版本的包，说明本地Parcel包配置无误，直接点继续。<br><img src="https://img-blog.csdnimg.cn/2019102311125149.png" alt="在这里插入图片描述"></p>
+<p>如果配置本地Parcel包无误，那么已下载是瞬间就完成的，因为不需要下载，然后耐心等待分配过程就行了，速度由内网网速决定。完成后点击继续。</p>
+<p><img src="https://img-blog.csdnimg.cn/20191023111259437.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191023111303332.png" alt="在这里插入图片描述"><br>接下来是服务器检查，如果前面严格按照步骤一步步做下来这里应该是不会出现任何问题的，全绿通过。点击完成。<br><img src="https://img-blog.csdnimg.cn/20191023111313132.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>接下来是选择安装服务，根据需要按需选择就好，点击继续<br><img src="https://img-blog.csdnimg.cn/20191023111321125.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>服务配置，一般情况下保持默认就可以了，也可以自己手动根据节点情况进行分配，点击继续<br><img src="https://img-blog.csdnimg.cn/20191023111332745.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>接下来是数据库的设置<br><img src="https://img-blog.csdnimg.cn/20191023111338391.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>下面是集群设置的审查页面，保持默认就可以，因为后面还需要更多详细的改动，不建议这里完成，我们首要的任务是先将集群建立起来。所以点击继续<br><img src="https://img-blog.csdnimg.cn/2019102311135017.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>开始安装各个服务，安装Hive的时候可能会报错，因为我们使用了MySql作为hive的元数据存储，hive默认并没有带mysql的驱动，拷贝一个就行了<br>cp mysql-connector-java-5.1.46-bin.jar /opt/cloudera/parcels/CDH-5.12.1-1.cdh5.12.1.p0.3/lib/hive/lib/<br>全部绿色通过，然后点击继续。<br><img src="https://img-blog.csdnimg.cn/20191023111413524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>到此为止CDH集群就算部署完毕了<br>效果图<br><img src="https://img-blog.csdnimg.cn/20191023111418745.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2019102311142468.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Xin Ge's ballad feelings</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://yoursite.com/2019/10/23/集群搭建/CDH集群搭建/">http://yoursite.com/2019/10/23/集群搭建/CDH集群搭建/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY<strong>?</strong></strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/大数据环境搭建/"># 大数据环境搭建</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/11/03/Hexo-最常用的几个命令/">Hexo 最常用的几个命令</a>
+            
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Xin Ge&#39;s ballad feelings | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

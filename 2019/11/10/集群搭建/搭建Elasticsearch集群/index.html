@@ -13,7 +13,7 @@
 
 
 
-<title>Hexo 最常用的几个命令 | 就让这时光别停留</title>
+<title>搭建Elasticsearch集群 | 就让这时光别停留</title>
 
 
 
@@ -113,7 +113,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Hexo 最常用的几个命令</h1>
+            <h1 class="post-title">搭建Elasticsearch集群</h1>
             
                 <div class="post-meta">
                     
@@ -122,7 +122,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 3, 2019&nbsp;&nbsp;14:50:56</a>
+                        Date: <a href="#">November 10, 2019&nbsp;&nbsp;20:24:32</a>
                         </span>
                     
                     
@@ -131,14 +131,11 @@
         </header>
 
         <div class="post-content">
-            <p>Hexo 最常用的几个命令</p>
-<p>Hexo 约有二十个命令，但普通用户经常使用的大概只有下列几个:<br>hexo s<br>hexo s</p>
-<p>启动本地服务器，用于预览主题。默认地址： <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a><br>hexo s 是 hexo server 的缩写，命令效果一致；<br>预览的同时可以修改文章内容或主题代码，保存后刷新页面即可；<br>对 Hexo 根目录 _config.yml 的修改，需要重启本地服务器后才能预览效果。<br>hexo new<br>hexo new “学习笔记  六”</p>
-<p>新建一篇标题为 学习笔记 六 的文章，因为标题里有空格，所以加上了引号。<br>文章标题可以在对应 md 文件里改，新建时标题可以写的简单些。<br>hexo d<br>hexo d</p>
-<p>自动生成网站静态文件，并部署到设定的仓库。<br>hexo d 是 hexo deploy 的缩写，命令效果一致。<br>hexo clean<br>hexo clean</p>
-<p>清除缓存文件 db.json 和已生成的静态文件 public 。<br>网站显示异常时可以执行这条命令试试。<br>hexo g<br>hexo g</p>
-<p>生成网站静态文件到默认设置的 public 文件夹。<br>便于查看网站生成的静态文件或者手动部署网站；<br>如果使用自动部署，不需要先执行该命令；<br>hexo g 是 hexo generate 的缩写，命令效果一致。<br>hexo new page<br>hexo new page aboutme</p>
-<p>新建一个标题为 aboutme 的页面，默认链接地址为 主页地址/aboutme/<br>标题可以为中文，但一般习惯用英文；<br>页面标题和文章一样可以随意修改；<br>页面不会出现在首页文章列表和归档中，也不支持设</p>
+            <p>搭建Elasticsearch集群</p>
+<p>安装版本：elasticsearch-7.3.2.tar.gz<br>1.准备工作<br>安装jdk1.8<br>2.安装ES<br>​ （1）将安装包解压到 /usr/Elasticsearch 目录下<br> （2）配置elasticsearch.yml(空格问题)，并创建对应的data和logs文件夹</p>
+<p><img src="https://img-blog.csdnimg.cn/20191110201557717.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191110201620519.png" alt="在这里插入图片描述"><br> （3）新建用户，每台服务器都要新建，ES不允许root用户运行<br>groupadd elsearch                                    新增elsearch用户组<br>useradd elsearch -g elsearch -p elasticsearch        创建elsearch用户<br>chown -R elsearch:elsearch ./elasticsearch-6.6.1     用户目录权限<br>3.切换到elsearch用户下，启动ES</p>
+<p>4.测试，访问 <a href="http://172.18.74.42:9200/，返回结果如下" target="_blank" rel="noopener">http://172.18.74.42:9200/，返回结果如下</a></p>
+<p>ElasticSearch-head插件安装<img src="https://img-blog.csdnimg.cn/20191110201722463.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>1.准备工作<br>​ （1）安装Node.js,用yum安装<br>​ （2）安装npm<br>​ （3）安装grunt<br>2.在27服务器上安装elasticsearch-head<br>3.修改Gruntfile.js文件<br>4.启动elasticsearch-head<br>5.浏览器访问 <a href="http://172.17.8.27:9100/" target="_blank" rel="noopener">http://172.17.8.27:9100/</a><br><img src="https://img-blog.csdnimg.cn/20191110202249633.png" alt="在这里插入图片描述"></p>
 
         </div>
 
@@ -153,7 +150,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://yoursite.com/2019/11/03/Hexo-最常用的几个命令/">http://yoursite.com/2019/11/03/Hexo-最常用的几个命令/</a></span>
+                        <span><a href="http://yoursite.com/2019/11/10/集群搭建/搭建Elasticsearch集群/">http://yoursite.com/2019/11/10/集群搭建/搭建Elasticsearch集群/</a></span>
                     </p>
                 
                 
@@ -177,7 +174,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/git博客搭建/"># git博客搭建</a>
+                        <a href="/tags/大数据环境搭建/"># 大数据环境搭建</a>
                     
                         
                 </span>
@@ -190,10 +187,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2019/11/04/Flink/对Flink的Stream-在-operator传递模式疑惑演变/">对Flink的Stream 在 operator传递模式疑惑演变</a>
+                <a class="prev" rel="prev" href="/2019/11/26/Flink/Flink学习笔记（window的理解认识）/">Flink学习笔记（window的理解认识）</a>
             
             
-            <a class="next" rel="next" href="/2019/10/23/集群搭建/CDH集群搭建/">CDH集群搭建</a>
+            <a class="next" rel="next" href="/2019/11/10/网络集成/">网络集成</a>
             
         </section>
 

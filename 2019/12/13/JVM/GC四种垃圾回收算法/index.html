@@ -13,7 +13,7 @@
 
 
 
-<title>Hexo 最常用的几个命令 | 就让这时光别停留</title>
+<title>GC四种垃圾回收算法 | 就让这时光别停留</title>
 
 
 
@@ -113,7 +113,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Hexo 最常用的几个命令</h1>
+            <h1 class="post-title">GC四种垃圾回收算法</h1>
             
                 <div class="post-meta">
                     
@@ -122,7 +122,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">November 3, 2019&nbsp;&nbsp;14:50:56</a>
+                        Date: <a href="#">December 13, 2019&nbsp;&nbsp;19:32:34</a>
                         </span>
                     
                     
@@ -131,14 +131,12 @@
         </header>
 
         <div class="post-content">
-            <p>Hexo 最常用的几个命令</p>
-<p>Hexo 约有二十个命令，但普通用户经常使用的大概只有下列几个:<br>hexo s<br>hexo s</p>
-<p>启动本地服务器，用于预览主题。默认地址： <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a><br>hexo s 是 hexo server 的缩写，命令效果一致；<br>预览的同时可以修改文章内容或主题代码，保存后刷新页面即可；<br>对 Hexo 根目录 _config.yml 的修改，需要重启本地服务器后才能预览效果。<br>hexo new<br>hexo new “学习笔记  六”</p>
-<p>新建一篇标题为 学习笔记 六 的文章，因为标题里有空格，所以加上了引号。<br>文章标题可以在对应 md 文件里改，新建时标题可以写的简单些。<br>hexo d<br>hexo d</p>
-<p>自动生成网站静态文件，并部署到设定的仓库。<br>hexo d 是 hexo deploy 的缩写，命令效果一致。<br>hexo clean<br>hexo clean</p>
-<p>清除缓存文件 db.json 和已生成的静态文件 public 。<br>网站显示异常时可以执行这条命令试试。<br>hexo g<br>hexo g</p>
-<p>生成网站静态文件到默认设置的 public 文件夹。<br>便于查看网站生成的静态文件或者手动部署网站；<br>如果使用自动部署，不需要先执行该命令；<br>hexo g 是 hexo generate 的缩写，命令效果一致。<br>hexo new page<br>hexo new page aboutme</p>
-<p>新建一个标题为 aboutme 的页面，默认链接地址为 主页地址/aboutme/<br>标题可以为中文，但一般习惯用英文；<br>页面标题和文章一样可以随意修改；<br>页面不会出现在首页文章列表和归档中，也不支持设</p>
+            <p>GC(分代收集算法)<br>次数上频繁收集Young区<br>次数上较少收集Old区<br>基本不动元空间<br>GC算法<br><img src="https://img-blog.csdnimg.cn/20191213192807647.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>JVM进行GC时，并非每次都对上面三个内存区域一起回收,大部分回收的都是只新生代，因此按照GC回收的区域又分为<br>普通GC<br>全局GC Full/Major GC<br>Major GC的速度一般要比MinorGC慢10倍以上（原因是堆空间中新生区占1/3，养老区占2/3，养老区进行扫描gc时是全局扫描，所以时间用时较多）</p>
+<p>GC的四大算法<br>1，引用计数算法<br><img src="https://img-blog.csdnimg.cn/20191213192836608.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>2，复制技术算法（Copying）<br>优点：不会产生复制碎片<br>不会丢东西<br>缺点：耗空间</p>
+<p><img src="https://img-blog.csdnimg.cn/20191213192853239.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191213192938551.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191213192951202.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>3,    标记清楚算法（Mark-Sweep）<br>节约时间<br>产生内存碎片<br><img src="https://img-blog.csdnimg.cn/2019121319300715.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>4    标记清除压缩算法（Mark-Compact）<br><img src="https://img-blog.csdnimg.cn/201912131930252.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>没有最好的算法，只有最合适的算法====》fendaishoujisuanfa<br>年轻代*(Young Gen)<br>年轻代的特点his区域相对老年代较小，速度是最快的，复制算法的效率只和当前存活对象大小有关，因而很适用于年轻代的回收，而复制算法内存利用率不高的问题，通过hotspot的两个survivor设计得到缓解<br>老年代（Tenure Gen）<br>老年的的特点是区域大，对象存活率高<br>由标记清除或标记整理混合实现</p>
+<p>JMM<br>线程间无法通信，需要主内存作为中间件<br>  <img src="https://img-blog.csdnimg.cn/20191213193053405.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20191213193041803.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>JMM 可见性（通知机制）<br>先建造一个模型类<br>静态先行</p>
 
         </div>
 
@@ -153,7 +151,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://yoursite.com/2019/11/03/Hexo-最常用的几个命令/">http://yoursite.com/2019/11/03/Hexo-最常用的几个命令/</a></span>
+                        <span><a href="http://yoursite.com/2019/12/13/JVM/GC四种垃圾回收算法/">http://yoursite.com/2019/12/13/JVM/GC四种垃圾回收算法/</a></span>
                     </p>
                 
                 
@@ -177,7 +175,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/git博客搭建/"># git博客搭建</a>
+                        <a href="/tags/GC算法/"># GC算法</a>
                     
                         
                 </span>
@@ -190,10 +188,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2019/11/04/Flink/对Flink的Stream-在-operator传递模式疑惑演变/">对Flink的Stream 在 operator传递模式疑惑演变</a>
             
-            
-            <a class="next" rel="next" href="/2019/10/23/集群搭建/CDH集群搭建/">CDH集群搭建</a>
+            <a class="next" rel="next" href="/2019/11/28/python/Django项目搭建/">Django项目搭建</a>
             
         </section>
 
