@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Xin Ge's ballad feelings">
+
+
+
+    <meta name="description" content="我要记住你的样子，像鱼记住水的拥抱">
+
+
+
+<title>Flink源码阅读 | 就让这时光别停留</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Xin Ge&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Xin Ge&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Flink源码阅读</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Xin Ge's ballad feelings</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 1, 2020&nbsp;&nbsp;14:20:46</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>Flink源码解读</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">org.apache.flink.client;</span><br><span class="line">LocalExecutor模式解读</span><br><span class="line">A <span class="class"><span class="keyword">class</span> <span class="title">for</span> <span class="title">executing</span> <span class="title">a</span> </span>&#123;<span class="meta">@link</span> Plan&#125;  on a local embedded Flink runtime instance.</span><br></pre></td></tr></table></figure>
+
+<p>用于在本地嵌入的Flink运行时实例上执行{计划}的类<br>public class LocalExecutor extends PlanExecutor {}<br><img src="https://img-blog.csdnimg.cn/20200101141234944.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>在这个类中注意到了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LocalExecutor</span> <span class="keyword">extends</span> <span class="title">PlanExecutor</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> NepheleMiniCluster nephele;</span><br></pre></td></tr></table></figure>
+
+<p>这个私有变量，于是顺着源码一路读，找到NepheleMinniCluster<br><img src="https://img-blog.csdnimg.cn/2020010114141189.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200101141443533.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>在该类中注意到getJobClient()方法，该方法的形参是JobGraph类型，于是顺水推舟，找到了JobGraph类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A job graph represents an entire Flink runtime job</span><br></pre></td></tr></table></figure>
+
+<p>作业图表示整个Flink运行时作业(该类的作用)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JobGraph</span> <span class="keyword">implements</span> <span class="title">IOReadableWritable</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+
+<p>定义图的结构/拓扑的成员<br>源码清晰的解释说明了每一个属性的作用，<br>/** List of task vertices included in this job graph. */<br>private final Map&lt;JobVertexID, AbstractJobVertex&gt; taskVertices = new LinkedHashMap&lt;JobVertexID, AbstractJobVertex&gt;();</p>
+<p>/** The job configuration attached to this job. */任务图中包含的任务顶点列表<br>private final Configuration jobConfiguration = new Configuration();</p>
+<p>/** Set of JAR files required to run this job. */<br>private final transient List<path> userJars = new ArrayList<path>();</path></path></p>
+<p>/** Set of blob keys identifying the JAR files required to run this job. */<br>private final List<blobkey> userJarBlobKeys = new ArrayList<blobkey>();</blobkey></blobkey></p>
+<p>/** ID of this job. */<br>private final JobID jobID;</p>
+<p>/** Name of this job. */<br>private String jobName;</p>
+<p>/** The number of times that failed tasks should be re-executed */标识运行此作业所需的JAR文件的一组blob键<br>private int numExecutionRetries;</p>
+<p>/** flag to enable queued scheduling */标记以启用排队调度<br>private boolean allowQueuedScheduling;</p>
+<p>紧接着就是</p>
+<p>该类各种属性的构造器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs a new job graph with no name and a random job ID.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">JobGraph</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>((String) <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs a new job graph with the given name and a random job ID.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> jobName The name of the job</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">JobGraph</span><span class="params">(String jobName)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>(<span class="keyword">null</span>, jobName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs a new job graph with the given name and a random job ID.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> jobId The id of the job</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> jobName The name of the job</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">JobGraph</span><span class="params">(JobID jobId, String jobName)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>.jobID = jobId == <span class="keyword">null</span> ? <span class="keyword">new</span> JobID() : jobId;</span><br><span class="line">   <span class="keyword">this</span>.jobName = jobName == <span class="keyword">null</span> ? <span class="string">"(unnamed job)"</span> : jobName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs a new job graph with no name and a random job ID.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> vertices The vertices to add to the graph.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">JobGraph</span><span class="params">(AbstractJobVertex... vertices)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>(<span class="keyword">null</span>, vertices);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs a new job graph with the given name and a random job ID.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> jobName The name of the job.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> vertices The vertices to add to the graph.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">JobGraph</span><span class="params">(String jobName, AbstractJobVertex... vertices)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>(<span class="keyword">null</span>, jobName, vertices);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs a new job graph with the given name and a random job ID.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> jobId The id of the job.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> jobName The name of the job.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> vertices The vertices to add to the graph. 加入到图中的顶点</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">JobGraph</span><span class="params">(JobID jobId, String jobName, AbstractJobVertex... vertices)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>(jobId, jobName);</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">for</span> (AbstractJobVertex vertex : vertices) &#123;</span><br><span class="line">      addVertex(vertex);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对以上的public JobGraph(JobID jobId, String jobName, AbstractJobVertex… vertices) {构造器中的AbstractJobVertex好奇，于是查看了该类的详细信息，贴代码如下<img src="https://img-blog.csdnimg.cn/20200101141607648.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>Job    VertexID进行详细查看源码<img src="https://img-blog.csdnimg.cn/20200101141627680.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lhbmd3ZW54aWFvaGFoYQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** The size of a long in bytes */</span>长度(以字节为单位)的大小</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIZE_OF_LONG = <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** The size of the ID in byte */</span> ID的大小(以字节为单位)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIZE = <span class="number">2</span> * SIZE_OF_LONG;</span><br></pre></td></tr></table></figure>
+
+<p>接下来就是各种构造字节的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractJobVertex</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_NAME = <span class="string">"(unnamed vertex)"</span>;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   <span class="comment">// --------------------------------------------------------------------------------------------</span></span><br><span class="line">   <span class="comment">// Members that define the structure / topology of the graph</span></span><br><span class="line">   <span class="comment">// --------------------------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">/** The ID of the vertex. */</span> 顶点的ID</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> JobVertexID id;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/** List of produced data sets, one per writer */</span> 生成的数据集列表，每个写入器一个</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;IntermediateDataSet&gt; results = <span class="keyword">new</span> ArrayList&lt;IntermediateDataSet&gt;();</span><br><span class="line">                                <span class="comment">//中间数据集</span></span><br><span class="line">   <span class="comment">/** List of edges with incoming data. One per Reader. */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;JobEdge&gt; inputs = <span class="keyword">new</span> ArrayList&lt;JobEdge&gt;();</span><br><span class="line"></span><br><span class="line">   <span class="comment">/** Number of subtasks to split this task into at runtime.*/</span> 在运行时将此任务拆分为多个子任务</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> parallelism = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/** Custom configuration passed to the assigned task at runtime. */</span></span><br><span class="line">   <span class="keyword">private</span> Configuration configuration;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/** The class of the invokable. */</span></span><br><span class="line">   <span class="keyword">private</span> String invokableClassName;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/** Optionally, a source of input splits */</span></span><br><span class="line">   <span class="keyword">private</span> InputSplitSource&lt;?&gt; inputSplitSource;</span><br><span class="line">   </span><br><span class="line">   <span class="comment">/** The name of the vertex */</span></span><br><span class="line">   <span class="keyword">private</span> String name;</span><br><span class="line">   </span><br><span class="line">   <span class="comment">/** Optionally, a sharing group that allows subtasks from different job vertices to run concurrently in one slot */</span></span><br><span class="line">理论上，一个共享组允许来自不同作业顶点的子任务在一个槽中并发运行</span><br><span class="line">   <span class="keyword">private</span> SlotSharingGroup slotSharingGroup;</span><br><span class="line">   </span><br><span class="line">   <span class="comment">/** The group inside which the vertex subtasks share slots */</span></span><br><span class="line">   <span class="keyword">private</span> CoLocationGroup coLocationGroup;</span><br></pre></td></tr></table></figure>
+
+<p>对该方法返回的inputsplitSource的类进行查看</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Optionally, a source of input splits */</span></span><br><span class="line"><span class="keyword">private</span> InputSplitSource&lt;?&gt; inputSplitSource;</span><br></pre></td></tr></table></figure>
+
+<p>该类中有2个接口方法，泛型类T继承了InputSplit</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">InputSplitSource</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">InputSplit</span>&gt; <span class="keyword">extends</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Computes the input splits. The given minimum number of splits is a hint as to how</span></span><br><span class="line"><span class="comment">    * many splits are desired.</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> minNumSplits Number of minimal input splits, as a hint.</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span> An array of input splits.</span></span><br><span class="line"><span class="comment">    * </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@throws</span> Exception Exceptions when creating the input splits may be forwarded and will cause the</span></span><br><span class="line"><span class="comment">    *                   execution to permanently fail.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   T[] createInputSplits(<span class="keyword">int</span> minNumSplits) <span class="keyword">throws</span> Exception;</span><br><span class="line">   </span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Returns the assigner for the input splits. Assigner determines which parallel instance of the</span></span><br><span class="line"><span class="comment">    * input format gets which input split.</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span> The input split assigner.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="function">InputSplitAssigner <span class="title">getInputSplitAssigner</span><span class="params">(T[] inputSplits)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到有一个InputSplitAssigner的分配器，输入分割的分配器参数是一个inputspit法人数组类型<br>InputSplit接口，贴代码如下（继承了IOReadableWritable，.Serializable）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.apache.flink.core.io;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This interface must be implemented by all kind of input splits that can be assigned to input formats.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">InputSplit</span> <span class="keyword">extends</span> <span class="title">IOReadableWritable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Returns the number of this input split.</span></span><br><span class="line"><span class="comment">    * </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span> the number of this input split</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">getSplitNumber</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractJobVertex</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> SlotSharingGroup slotSharingGroup;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对SlotSharingGroup所在的类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A slot sharing units defines which different task (from different job vertices) can be</span></span><br><span class="line"><span class="comment"> * deployed together within a slot. This is a soft permission, in contrast to the hard constraint</span></span><br><span class="line"><span class="comment"> * defined by a co-location hint.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SlotSharingGroup</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;JobVertexID&gt; ids = <span class="keyword">new</span> TreeSet&lt;JobVertexID&gt;();</span><br><span class="line">   </span><br><span class="line">   <span class="comment">/** Mapping of tasks to subslots. This field is only needed inside the JobManager, and is not RPCed. */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">transient</span> SlotSharingGroupAssignment taskAssignment;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">SlotSharingGroup</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">   </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">SlotSharingGroup</span><span class="params">(JobVertexID ... sharedVertices)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">for</span> (JobVertexID id : sharedVertices) &#123;</span><br><span class="line">         <span class="keyword">this</span>.ids.add(id);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addVertexToGroup</span><span class="params">(JobVertexID id)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.ids.add(id);</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeVertexFromGroup</span><span class="params">(JobVertexID id)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.ids.remove(id);</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="function"><span class="keyword">public</span> Set&lt;JobVertexID&gt; <span class="title">getJobVertexIds</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> Collections.unmodifiableSet(ids);</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   <span class="function"><span class="keyword">public</span> SlotSharingGroupAssignment <span class="title">getTaskAssignment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.taskAssignment == <span class="keyword">null</span>) &#123;</span><br><span class="line">         <span class="keyword">this</span>.taskAssignment = <span class="keyword">new</span> SlotSharingGroupAssignment();</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.taskAssignment;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clearTaskAssignment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.taskAssignment != <span class="keyword">null</span>) &#123;</span><br><span class="line">         <span class="keyword">if</span> (<span class="keyword">this</span>.taskAssignment.getNumberOfSlots() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"SlotSharingGroup cannot clear task assignment, group still has allocated resources."</span>);</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">this</span>.taskAssignment = <span class="keyword">null</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="comment">// --------------------------------------------------------------------------------------------</span></span><br><span class="line">   </span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"SlotSharingGroup "</span> + <span class="keyword">this</span>.ids.toString();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该类的关键属性是存储了JobVertexID，</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Xin Ge's ballad feelings</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://yoursite.com/2020/01/01/Flink/Flink源码阅读/">http://yoursite.com/2020/01/01/Flink/Flink源码阅读/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY<strong>?</strong></strong></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Flink源码/"># Flink源码</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2019/12/13/JVM/GC四种垃圾回收算法/">GC四种垃圾回收算法</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Xin Ge&#39;s ballad feelings | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
